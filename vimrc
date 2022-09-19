@@ -1,5 +1,7 @@
 call plug#begin()
 
+Plug 'dense-analysis/ale'
+
 Plug 'vim-airline/vim-airline'
 let g:airline_powerline_fonts=1
 let g:airline_theme='edge'
