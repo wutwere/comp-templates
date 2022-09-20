@@ -1,10 +1,12 @@
 call plug#begin()
 
 Plug 'dense-analysis/ale'
+let g:ale_linters = {'cpp': ['g++']}
+let g:ale_cpp_cc_options = '-std=c++17 -Wall -Wextra'
 
 Plug 'vim-airline/vim-airline'
-let g:airline_powerline_fonts=1
-let g:airline_theme='edge'
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'edge'
 let g:airline#extensions#tabline#enabled = 1
 
 Plug 'sheerun/vim-polyglot'
