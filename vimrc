@@ -7,15 +7,13 @@ let g:ale_cpp_cc_options = '-std=c++17 -Wall -Wextra -DLOCAL'
 
 Plug 'vim-airline/vim-airline'
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'edge'
+let g:airline_theme = 'minimalist'
 let g:airline#extensions#tabline#enabled = 1
 
 Plug 'sheerun/vim-polyglot'
 
-Plug 'sainnhe/edge'
-Plug 'arzg/vim-colors-xcode'
+Plug 'dikiaap/minimalist'
 Plug 'tomasr/molokai'
-Plug 'joshdick/onedark.vim'
 Plug 'dracula/vim', { 'as': 'dracula' }
 
 call plug#end()
@@ -35,6 +33,7 @@ set rnu
 set expandtab
 set tabstop=2
 set shiftwidth=2
+set mouse=a
 
 inoremap {<CR> {<CR>}<Esc>O
 
@@ -42,4 +41,4 @@ autocmd filetype cpp nnoremap <C-N> ggdGa#include <bits/stdc++.h><CR>using names
 autocmd filetype cpp nnoremap <C-B> :<C-U>w <bar> !g++ -O2 -DLOCAL -std=c++17 %:r.cpp -o run<CR>
 autocmd filetype cpp nnoremap <C-C> :<C-U>call writefile(split(getreg('+'), '\n'), 'in') \| !start cmd /c "run < in & pause"<CR><CR>
 autocmd filetype cpp nnoremap <C-S> :<C-U>!start cmd /c "run & pause"<CR><CR>
-autocmd filetype cpp nnoremap <C-A> :<C-U>:%y+<CR>
+nnoremap <C-A> :<C-U>:%y+<CR>
