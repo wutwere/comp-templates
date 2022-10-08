@@ -7,7 +7,7 @@ let g:ale_cpp_cc_options = '-std=c++17 -Wall -Wextra -DLOCAL'
 
 Plug 'vim-airline/vim-airline'
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'minimalist'
+let g:airline_theme = 'dracula'
 let g:airline#extensions#tabline#enabled = 1
 
 Plug 'sheerun/vim-polyglot'
@@ -25,7 +25,7 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 cd ~/Desktop/code
 
 syntax on
-color molokai
+color dracula
 
 set termguicolors
 set nu
