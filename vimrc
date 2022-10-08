@@ -57,7 +57,7 @@ int main() {
 END
 
 autocmd filetype cpp nnoremap <C-N> :<C-U>%d \| call setline(1, g:template)<CR>G2k$
-autocmd filetype cpp nnoremap <C-B> :<C-U>w <bar> !g++ -O2 -DLOCAL -std=c++17 %:r.cpp -o run<CR>
+autocmd filetype cpp nnoremap <C-B> :<C-U>w \| !g++ -O2 -DLOCAL -std=c++17 %:r.cpp -o run<CR>
 autocmd filetype cpp nnoremap <C-C> :<C-U>call writefile(split(getreg('+'), '\n'), 'in') \| !start cmd /c "run < in & pause"<CR><CR>
-autocmd filetype cpp nnoremap <C-S> :<C-U>!start cmd /c "run & pause"<CR><CR>
-nnoremap <C-A> :<C-U>:%y+<CR>
+autocmd filetype cpp nnoremap <C-S> :<C-U>!start cmd /c "run & timeout /t -1 /nobreak"<CR><CR>
+nnoremap <C-A> :<C-U>%y+<CR>
