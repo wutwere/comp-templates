@@ -87,6 +87,19 @@ int main() {
   cin >> n;
   vector<vector<array<int64_t, 2>>> edges;
 
+
+  // sieve of eratosthenes
+  vector<bool> sieve(MAXN + 1, true);
+  sieve[0] = sieve[1] = false;
+  for (int i = 2; i * i <= MAXN; i++)
+      for (int j = i * i; sieve[i] && j <= MAXN; j += i)
+        sieve[j] = false;
+  vector<int> primes = {2};
+  for (int i = 3; i <= MAXN; i += 3)
+    if (sieve[i])
+      primes.push_back(i);
+
+
   // floyd-warshall: get all shortest paths in O(n^3)
   vector dist(n + 1, vector<int64_t>(n + 1, INF64));
   for (int i = 1; i <= n; i++) {
@@ -94,13 +107,10 @@ int main() {
     for (auto [j, weight] : edges[i])
       dist[i][j] = weight;
   }
-  for (int k = 1; k <= n; k++) {
-    for (int i = 1; i <= n; i++) {
-      for (int j = 1; j <= n; j++) {
+  for (int k = 1; k <= n; k++)
+    for (int i = 1; i <= n; i++)
+      for (int j = 1; j <= n; j++)
         dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
-      }
-    }
-  }
 
   ///////////////////////////////////////////////////////////////
   return 0;
