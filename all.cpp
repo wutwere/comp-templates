@@ -11,10 +11,10 @@ int n, a[MAXN + 1];
 
 // x to the y-th power mod MOD in O(log y)
 int64_t powmod(int64_t x, int64_t y) {
-	if (y == 0) return 1;
-	int64_t res = powmod(x * x % MOD, y / 2);
-	if (y & 1) res *= x;
-	return res % MOD;
+  if (y == 0) return 1;
+  int64_t res = powmod(x * x % MOD, y / 2);
+  if (y & 1) res *= x;
+  return res % MOD;
 }
 
 
