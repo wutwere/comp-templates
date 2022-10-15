@@ -112,6 +112,7 @@ int main() {
       for (int j = 1; j <= n; j++)
         dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
 
+
   // topological sort with cycle detection in O(n)
   vector<vector<int>> out_edges(n + 1);
   vector<bool> visited(n + 1);
