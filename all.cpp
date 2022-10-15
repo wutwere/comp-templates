@@ -85,7 +85,6 @@ vector<int64_t> dijkstra(int root, vector<vector<array<int64_t, 2>>> &edges) {
 int main() {
   ios::sync_with_stdio(0), cin.tie(0);
   cin >> n;
-  vector<vector<array<int64_t, 2>>> edges;
 
 
   // sieve of eratosthenes
@@ -101,6 +100,7 @@ int main() {
 
 
   // floyd-warshall: get all shortest paths in O(n^3)
+  vector<vector<array<int64_t, 2>>> edges;
   vector dist(n + 1, vector<int64_t>(n + 1, INF64));
   for (int i = 1; i <= n; i++) {
     dist[i][i] = 0;
@@ -111,6 +111,27 @@ int main() {
     for (int i = 1; i <= n; i++)
       for (int j = 1; j <= n; j++)
         dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+
+  // topological sort with cycle detection in O(n)
+  vector<vector<int>> out_edges(n + 1);
+  vector<bool> visited(n + 1);
+  vector<int> topo, topoIdx(n + 1);
+  function<void(int)> dfs = [&](int cur) {
+    if (visited[cur]) return;
+    visited[cur] = true;
+    for (int nbr : out_edges[cur]) dfs(nbr);
+    topo.push_back(cur);
+  };
+  for (int i = 1; i <= n; i++) if (!visited[i]) dfs(i);
+  reverse(topo.begin(), topo.end());
+  for (int i = 0; i < n; i++) topoIdx[topo[i]] = i;
+  bool cycle = false;
+  for (int i = 1; !cycle && i <= n; i++)
+    for (int nbr : out_edges[i])
+      if (topoIdx[i] > topoIdx[nbr]) {
+        cycle = true;
+        break;
+      }
 
   ///////////////////////////////////////////////////////////////
   return 0;
