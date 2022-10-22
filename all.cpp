@@ -91,8 +91,8 @@ int main() {
   vector<bool> sieve(MAXN + 1, true);
   sieve[0] = sieve[1] = false;
   for (int i = 2; i * i <= MAXN; i++)
-      for (int j = i * i; sieve[i] && j <= MAXN; j += i)
-        sieve[j] = false;
+    for (int j = i * i; sieve[i] && j <= MAXN; j += i)
+      sieve[j] = false;
   vector<int> primes = {2};
   for (int i = 3; i <= MAXN; i += 3)
     if (sieve[i])
