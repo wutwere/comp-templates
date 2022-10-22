@@ -49,14 +49,13 @@ using namespace std;
 
 int main() {
   ios::sync_with_stdio(0), cin.tie(0);
-  int tt; cin >> tt;
-  for (int tc = 1; tc <= tt; tc++) {
-    cout << "Case #" << tc << ": ";
+  for (int __, _ = (cin >> __, 0); ++_ <= __;) {
+    cout << "Case #" << _ << ": ";
   }
 }
 END
 
-autocmd filetype cpp nnoremap <C-N> :<C-U>%d \| call setline(1, g:template)<CR>G2k$
+autocmd filetype cpp nnoremap <C-N> :<C-U>%d \| call setline(1, g:template)<CR>G2k
 autocmd filetype cpp nnoremap <C-B> :<C-U>w \| !g++ -O2 -DLOCAL -std=c++17 %:r.cpp -o run<CR>
 autocmd filetype cpp nnoremap <C-C> :<C-U>call writefile(split(getreg('+'), '\n'), 'in') \| !start cmd /c "run < in & pause"<CR><CR>
 autocmd filetype cpp nnoremap <C-S> :<C-U>!start cmd /c "run & timeout /t -1 /nobreak"<CR><CR>
