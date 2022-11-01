@@ -16,6 +16,8 @@ Plug 'dikiaap/minimalist'
 Plug 'tomasr/molokai'
 Plug 'dracula/vim', { 'as': 'dracula' }
 
+Plug 'ThePrimeagen/vim-be-good'
+
 call plug#end()
 
 autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
