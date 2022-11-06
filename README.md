@@ -1,5 +1,5 @@
 # precompiling bits/stdc++.h
-cd into `C:\MinGW\lib\gcc\mingw32\9.2.0\include\c++\mingw32\bits`
+find bits/stdc++ with `g++ -H file.cpp` then cd into directory
 and then `g++ stdc++.h -O2 -DLOCAL` or whatever flags
 # font
 [install font here](https://github.com/powerline/fonts/blob/master/UbuntuMono/Ubuntu%20Mono%20derivative%20Powerline.ttf)
