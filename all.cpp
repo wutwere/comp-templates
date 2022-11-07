@@ -36,32 +36,41 @@ int64_t ncr(int n, int r) {
 }
 
 
-// segment tree: 1-indexed, builds from array a, upd to set
-struct {
-  int t[2 * MAXN] = {0};
-  inline int combine(int l, int r) { return l + r; }
-  void build() {
+// seg_tree<int> st([](int a, int b) { return a + b; });
+// vector<int> a(100, 5);
+// st.build(a);
+// st.upd(0, 10);
+// st.query(0, 99);
+template <class T>
+struct seg_tree {
+  const static int MAXN = 100000;
+  function<T(T, T)> combine;
+  T t[2 * MAXN];
+  int n = MAXN;
+  seg_tree(function<T(T, T)> f) { combine = f; }
+  void build(vector<T>& a) {
+    n = a.size();
     for (int i = 0; i < n; i++)
-      t[i + n] = a[i + 1];
+      t[i + n] = a[i];
     for (int i = n - 1; i > 0; --i)
       t[i] = combine(t[i << 1], t[i << 1 | 1]);
   }
-  void upd(int p, int v) {
-    for (--p, t[p += n] = v; p >>= 1; )
+  void upd(int p, T v) {
+    for (t[p += n] = v; p >>= 1; )
       t[p] = combine(t[p << 1], t[p << 1 | 1]);
   }
-  int query(int l, int r) {
-    int resl = 0, resr = 0;
-    for (--l, l += n, r += n; l < r; l >>= 1, r >>= 1) {
+  T query(int l, int r) {
+    T resl = 0, resr = 0;
+    for (++r, l += n, r += n; l < r; l >>= 1, r >>= 1) {
       if (l & 1) resl = combine(resl, t[l++]);
       if (r & 1) resr = combine(t[--r], resr);
     }
     return combine(resl, resr);
   }
-} seg_tree;
+};
 
 
-// get all shortest paths from a root in O(m log n)
+// vector<int64_t> min_dists = dijkstra(1, edges);
 vector<int64_t> dijkstra(int root, vector<vector<array<int64_t, 2>>> &edges) {
   vector<int64_t> minDist(n + 1, INF64);
   priority_queue<array<int64_t, 2>> pq;
@@ -80,6 +89,21 @@ vector<int64_t> dijkstra(int root, vector<vector<array<int64_t, 2>>> &edges) {
   return minDist;
 }
 
+// disjoint_set<100000> ds;
+// ds.join(1, 2);
+// -ds.par[ds.find(1)];
+template <int N>
+struct disjoint_set {
+  int par[N + 1];
+  disjoint_set() { memset(par, -1, sizeof(par)); }
+  int find(int v) { return par[v] < 0 ? v : par[v] = find(par[v]); }
+  void join(int u, int v) {
+    if ((u = find(u)) != (v = find(v))) {
+      if (par[u] > par[v]) swap(u, v);
+      par[u] += par[v], par[v] = u;
+    }
+  }
+};
 
 /////////////////////////////////////////////////////////////////
 int main() {
@@ -87,7 +111,7 @@ int main() {
   cin >> n;
 
 
-  // sieve of eratosthenes
+  // sieve[i] = true if i is prime
   vector<bool> sieve(MAXN + 1, true);
   sieve[0] = sieve[1] = false;
   for (int i = 2; i * i <= MAXN; i++)
