@@ -57,8 +57,19 @@ int main() {
 }
 END
 
+let g:runner =<< END
+@echo off
+if "%~x1" == ".cpp" (g++ -O2 -DLOCAL -std=c++17 %1 -o run)
+echo --------------------------------------------------
+:a
+if "%~x1" == ".cpp" (run)
+if "%~x1" == ".py" (py %1)
+set /p choice="--------------------------------------------------"
+if '%choice%'==''' (exit)
+goto a
+END
+call writefile(g:runner, 'runner.bat')
+
 autocmd filetype cpp nnoremap <C-N> :<C-U>%d \| call setline(1, g:template)<CR>G2k
-autocmd filetype cpp nnoremap <C-B> :<C-U>w \| !g++ -O2 -DLOCAL -std=c++17 %:r.cpp -o run<CR>
-autocmd filetype cpp nnoremap <C-C> :<C-U>call writefile(split(getreg('+'), '\n'), 'in') \| !start cmd /c "run < in & pause"<CR><CR>
-autocmd filetype cpp nnoremap <C-S> :<C-U>!start cmd /c "run & timeout /t -1 /nobreak"<CR><CR>
+nnoremap <C-B> :<C-U>w \| !start cmd /c "runner.bat %:p"<CR><CR>
 nnoremap <C-A> :<C-U>%y+<CR>
