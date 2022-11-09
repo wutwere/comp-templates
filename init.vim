@@ -62,7 +62,7 @@ import sys, subprocess
 
 file_path = sys.argv[1]
 exten = file_path[file_path.rindex("."):]
-if exten == ".cpp": subprocess.run(f"g++ -O2 -DLOCAL -std=c++17 -fsanitize=undefined {file_path} -o run")
+if exten == ".cpp": subprocess.run(f"g++ -O2 -DLOCAL -std=c++17 {file_path} -o run")
 
 def run(cmd):
     try:
