@@ -59,20 +59,25 @@ END
 
 let g:runner =<< END
 import sys, subprocess
+
 file_path = sys.argv[1]
 exten = file_path[file_path.rindex("."):]
-if exten == ".cpp": subprocess.run(f"g++ -O2 -DLOCAL -std=c++17 {file_path} -o run")
+if exten == ".cpp": subprocess.run(f"g++ -O2 -DLOCAL -std=c++17 -fsanitize=undefined {file_path} -o run")
+
+def run(cmd):
+    try:
+        subprocess.run(cmd)
+    except:
+        pass
+
 print("=" * 90)
 while True:
-    if exten == ".cpp": subprocess.run("run")
-    if exten == ".py": subprocess.run(f"py {file_path}")
+    if exten == ".cpp": run("run")
+    if exten == ".py": run(f"py {file_path}")
     input("=" * 90)
 END
 call writefile(g:runner, 'runner.py')
 
 autocmd filetype cpp nnoremap <C-N> :<C-U>%d \| call setline(1, g:template)<CR>G2k
 nnoremap <C-B> :<C-U>w \| !start cmd /c "runner.py %:p"<CR><CR>
-"autocmd filetype cpp nnoremap <C-B> :<C-U>w \| !g++ -O2 -DLOCAL -std=c++17 %:r.cpp -o run<CR>
-"autocmd filetype cpp nnoremap <C-C> :<C-U>call writefile(split(getreg('+'), '\n'), 'in') \| !start cmd /c "run < in & pause"<CR><CR>
-"autocmd filetype cpp nnoremap <C-S> :<C-U>!start cmd /c "run & timeout /t -1 /nobreak"<CR><CR>
 nnoremap <C-A> :<C-U>%y+<CR>
