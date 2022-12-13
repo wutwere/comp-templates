@@ -57,8 +57,17 @@ int main() {
 }
 END
 
+function Run_clipboard()
+  call writefile(split(getreg('+'), '\n'), 'in')
+  if expand('%:e') == 'cpp'
+    execute '!start cmd /c "run < in & pause"'
+  elseif expand('%:e') == 'py'
+    execute '!start cmd /c "py ' . expand('%:t') . ' < in & pause"'
+  endif
+endfunction
+
 autocmd filetype cpp nnoremap <C-N> :<C-U>%d \| call setline(1, g:template)<CR>G2k
 autocmd filetype cpp nnoremap <C-B> :<C-U>w \| !g++ -O2 -DLOCAL -std=c++17 %:r.cpp -o run<CR>
-autocmd filetype cpp nnoremap <C-C> :<C-U>call writefile(split(getreg('+'), '\n'), 'in') \| !start cmd /c "run < in & pause"<CR><CR>
+nnoremap <C-C> :<C-U>call Run_clipboard()<CR><CR>
 autocmd filetype cpp nnoremap <C-S> :<C-U>!start cmd /c "run & timeout /t -1 /nobreak"<CR><CR>
 nnoremap <C-A> :<C-U>%y+<CR>
