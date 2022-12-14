@@ -4,6 +4,7 @@ Plug 'dense-analysis/ale'
 let g:ale_linters = {'cpp': ['g++']}
 let g:ale_cpp_cc_executable = 'g++'
 let g:ale_cpp_cc_options = '-std=c++17 -Wall -Wextra -DLOCAL'
+let g:ale_lint_on_text_changed = 'always'
 
 Plug 'vim-airline/vim-airline'
 let g:airline_powerline_fonts = 1
@@ -62,7 +63,7 @@ function Run_clipboard()
   if expand('%:e') == 'cpp'
     execute '!start cmd /c "run < in & pause"'
   elseif expand('%:e') == 'py'
-    execute '!start cmd /c "py ' . expand('%:t') . ' < in & pause"'
+    execute 'w | !start cmd /c "py ' . expand('%:t') . ' < in & pause"'
   endif
 endfunction
 
