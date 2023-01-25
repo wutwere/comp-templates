@@ -1,12 +1,20 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#include <ext/pb_ds/assoc_container.hpp>
+using namespace __gnu_pbds;
+typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> indexed_set;
+
 /////////////////////////////////////////////////////////////////
 
 const int MAXN = 1e6;
 const int MOD = 1e9 + 7;
 const int64_t INF64 = 1e18;
 int n, a[MAXN + 1];
+
+// parsing utility
+vector<string> split_string(string s, string spl) { vector<string> ret; int pos = 0; while (pos < s.size()) { size_t nxt = s.find(spl, pos); if (nxt == string::npos) { ret.push_back(s.substr(pos)); break; } else if (nxt == pos) { pos++; continue; } else { ret.push_back(s.substr(pos, int(nxt) - pos)); pos = nxt + 1; } } return ret; }
+vector<int> parse_ints(string s) { vector<int> ret; string temp = ""; bool neg = false; s += "#"; for (char c : s) { if (c == '-') { neg = !neg; } else if ('0' <= c && c <= '9') { temp += c; } else { if (temp.size()) { int x = stoi(temp); if (neg) x *= -1; ret.push_back(x); } temp = ""; neg = false; } } return ret; }
 
 
 // x to the y-th power mod MOD in O(log y)
@@ -89,6 +97,7 @@ vector<int64_t> dijkstra(int root, vector<vector<array<int64_t, 2>>> &edges) {
   return minDist;
 }
 
+
 // disjoint_set<100000> ds;
 // ds.join(1, 2);
 // -ds.par[ds.find(1)];
@@ -104,6 +113,23 @@ struct disjoint_set {
     }
   }
 };
+
+
+// vector<int> zarr = z(b + "#" + a);
+// everywhere where zarr[i] == b.size() means b appears
+vector<int> z(string s) {
+  int n = s.size();
+  vector<int> z(n);
+  int x = 0, y = 0;
+  for (int i = 1; i < n; i++) {
+    z[i] = max(0, min(z[i - x], y - i + 1));
+    while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
+      x = i; y = i + z[i]++;
+    }
+  }
+  return z;
+}
+
 
 /////////////////////////////////////////////////////////////////
 int main() {
