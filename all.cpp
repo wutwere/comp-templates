@@ -14,6 +14,7 @@ int n, a[MAXN + 1];
 
 // parsing utility
 vector<string> split_string(string s, string spl) { vector<string> ret; int pos = 0; while (pos < s.size()) { size_t nxt = s.find(spl, pos); if (nxt == string::npos) { ret.push_back(s.substr(pos)); break; } else if (nxt == pos) { pos++; continue; } else { ret.push_back(s.substr(pos, int(nxt) - pos)); pos = nxt + 1; } } return ret; }
+
 vector<int> parse_ints(string s) { vector<int> ret; string temp = ""; bool neg = false; s += "#"; for (char c : s) { if (c == '-') { neg = !neg; } else if ('0' <= c && c <= '9') { temp += c; } else { if (temp.size()) { int x = stoi(temp); if (neg) x *= -1; ret.push_back(x); } temp = ""; neg = false; } } return ret; }
 
 
@@ -129,6 +130,22 @@ vector<int> z(string s) {
   }
   return z;
 }
+
+
+struct custom_hash {
+  static uint64_t splitmix64(uint64_t x) {
+    // http://xorshift.di.unimi.it/splitmix64.c
+    x += 0x9e3779b97f4a7c15;
+    x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+    x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+    return x ^ (x >> 31);
+  }
+
+  size_t operator()(uint64_t x) const {
+    static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+    return splitmix64(x + FIXED_RANDOM);
+  }
+};
 
 
 /////////////////////////////////////////////////////////////////
