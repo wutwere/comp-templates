@@ -19,10 +19,10 @@ vector<int> parse_ints(string s) { vector<int> ret; string temp = ""; bool neg =
 
 
 // x to the y-th power mod MOD in O(log y)
-int64_t powmod(int64_t x, int64_t y) {
-  if (y == 0) return 1;
-  int64_t res = powmod(x * x % MOD, y / 2);
-  if (y & 1) res *= x;
+int powmod(int x, int y) {
+  int res = 1;
+  for (; y; y >>= 1, x = 1ll * x * x % MOD)
+    if (y & 1) res = 1ll * res * x % MOD;
   return res % MOD;
 }
 
@@ -79,6 +79,49 @@ struct seg_tree {
 };
 
 
+// RMQ + LCA
+template <class T = int>
+struct RMQ {
+    vector<vector<T>> jmp;  // 0-idx
+    RMQ(const vector<T>& V) : jmp(1, V) {
+        for (int pw = 1, k = 1; pw * 2 <= V.size(); pw *= 2, ++k) {
+            jmp.emplace_back(int(V.size()) - pw * 2 + 1);
+            for (int j = 0; j < jmp[k].size(); j++)
+              jmp[k][j] = min(jmp[k - 1][j], jmp[k - 1][j + pw]);
+        }
+    }
+    T query(int a, int b) { // [a, b)
+        assert(a < b);  // or return inf if a == b
+        int dep = 31 - __builtin_clz(b - a);
+        return min(jmp[dep][a], jmp[dep][b - (1 << dep)]);
+    }
+};
+// 0-idx
+// make vector<vector<int>> adj
+// then build LCA lca(adj, root)
+// then l = lca.lca(u, v)
+struct LCA {
+    int tim = 0;
+    vector<int> time, path, ret;
+    RMQ<int> rmq;
+    LCA(vector<vector<int>>& g, int rt) : time(g.size()), rmq((dfs(g, rt, -1), ret)) {}
+    void dfs(vector<vector<int>>& g, int u, int fa) {
+        time[u] = tim++;
+        for (int v : g[u]) {
+            if (v == fa) continue;
+            path.push_back(u), ret.push_back(time[u]);
+            dfs(g, v, u);
+        }
+    }
+    int lca(int a, int b) {
+        if (a == b) return a;
+        tie(a, b) = minmax(time[a], time[b]);
+        return path[rmq.query(a, b)];
+    }
+    // dist(a, b) { return depth[a] + depth[b] - 2 * depth[lca(a, b)]; }
+};
+
+
 // vector<int64_t> min_dists = dijkstra(1, edges);
 vector<int64_t> dijkstra(int root, vector<vector<array<int64_t, 2>>> &edges) {
   vector<int64_t> minDist(n + 1, INF64);
@@ -116,6 +159,140 @@ struct disjoint_set {
 };
 
 
+// tourist dinic's
+template <typename T>
+class flow_graph {
+ public:
+  static constexpr T eps = (T) 1e-9;
+ 
+  struct edge {
+    int from;
+    int to;
+    T c;
+    T f;
+  };
+ 
+  vector<vector<int>> g;
+  vector<edge> edges;
+  int n;
+  int st;
+  int fin;
+  T flow;
+ 
+  flow_graph(int _n, int _st, int _fin) : n(_n), st(_st), fin(_fin) {
+    assert(0 <= st && st < n && 0 <= fin && fin < n && st != fin);
+    g.resize(n);
+    flow = 0;
+  }
+ 
+  void clear_flow() {
+    for (const edge &e : edges) {
+      e.f = 0;
+    }
+    flow = 0;
+  }
+   
+  int add(int from, int to, T forward_cap, T backward_cap) {
+    assert(0 <= from && from < n && 0 <= to && to < n);
+    int id = (int) edges.size();
+    g[from].push_back(id);
+    edges.push_back({from, to, forward_cap, 0});
+    g[to].push_back(id + 1);
+    edges.push_back({to, from, backward_cap, 0});
+    return id;
+  }
+};
+ 
+template <typename T>
+class dinic {
+ public:
+  flow_graph<T> &g;
+ 
+  vector<int> ptr;
+  vector<int> d;
+  vector<int> q;
+ 
+  dinic(flow_graph<T> &_g) : g(_g) {
+    ptr.resize(g.n);
+    d.resize(g.n);
+    q.resize(g.n);
+  }
+ 
+  bool expath() {
+    fill(d.begin(), d.end(), -1);
+    q[0] = g.fin;
+    d[g.fin] = 0;
+    int beg = 0, end = 1;
+    while (beg < end) {
+      int i = q[beg++];
+      for (int id : g.g[i]) {
+        const auto &e = g.edges[id];
+        const auto &back = g.edges[id ^ 1];
+        if (back.c - back.f > g.eps && d[e.to] == -1) {
+          d[e.to] = d[i] + 1;
+          if (e.to == g.st) {
+            return true;
+          }
+          q[end++] = e.to;
+        }
+      }
+    }
+    return false;
+  }
+   
+  T dfs(int v, T w) {
+    if (v == g.fin) {
+      return w;
+    }
+    int &j = ptr[v];
+    while (j >= 0) {
+      int id = g.g[v][j];
+      const auto &e = g.edges[id];
+      if (e.c - e.f > g.eps && d[e.to] == d[v] - 1) {
+        T t = dfs(e.to, min(e.c - e.f, w));
+        if (t > g.eps) {
+          g.edges[id].f += t;
+          g.edges[id ^ 1].f -= t;
+          return t;
+        }
+      }
+      j--;
+    }
+    return 0;
+  }
+ 
+  T max_flow() {
+    while (expath()) {
+      for (int i = 0; i < g.n; i++) {
+        ptr[i] = (int) g.g[i].size() - 1;
+      }
+      T big_add = 0;
+      while (true) {
+        T add = dfs(g.st, numeric_limits<T>::max());
+        if (add <= g.eps) {
+          break;
+        }
+        big_add += add;
+      }
+      if (big_add <= g.eps) {
+        break;
+      }
+      g.flow += big_add;
+    }
+    return g.flow;
+  }
+ 
+  vector<bool> min_cut() {
+    max_flow();
+    vector<bool> ret(g.n);
+    for (int i = 0; i < g.n; i++) {
+      ret[i] = (d[i] != -1);
+    }
+    return ret;
+  }
+};
+
+
 // vector<int> zarr = z(b + "#" + a);
 // everywhere where zarr[i] == b.size() means b appears
 vector<int> z(string s) {
@@ -129,6 +306,23 @@ vector<int> z(string s) {
     }
   }
   return z;
+}
+
+
+// vector<int> m = manacher(s);
+// m[2 * i] for even length palindrome centered between i - 1 and i
+// m[2 * i + 1] for odd length palindrome centered at i
+vector<int> manacher(string &s) {
+  string odd = "#";
+  for (char c : s) odd += c, odd += '#';
+  odd = "$" + odd + "^";
+  vector<int> m(odd.size());
+  for (int i = 1, l = 1, r = 1; i < odd.size(); i++) {
+    if (i < r) m[i] = max(0, min(r - i, m[l + r - i]));
+    if (i + m[i] >= r) while (odd[i - m[i] - 1] == odd[i + m[i] + 1])
+        m[i]++, l = i - m[i], r = i + m[i];
+  }
+  return vector<int>(m.begin() + 1, m.end() - 2);
 }
 
 
@@ -161,7 +355,7 @@ int main() {
     for (int j = i * i; sieve[i] && j <= MAXN; j += i)
       sieve[j] = false;
   vector<int> primes = {2};
-  for (int i = 3; i <= MAXN; i += 3)
+  for (int i = 3; i <= MAXN; i += 2)
     if (sieve[i])
       primes.push_back(i);
 
