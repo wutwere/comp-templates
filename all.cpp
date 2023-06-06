@@ -342,6 +342,89 @@ struct custom_hash {
 };
 
 
+// 2d geometry
+struct point {
+  int x, y;
+ 
+  point(int x_ = 0, int y_ = 0) : x(x_), y(y_) {}
+ 
+  point operator+(point p) { return point(x + p.x, y + p.y); }
+  point operator-(point p) { return point(x - p.x, y - p.y); }
+  point operator*(int c) { return point(x * c, y * c); }
+  point operator/(int c) { return point(x / c, y / c); }
+ 
+  bool operator==(point p) { return x == p.x && y == p.y; }
+  bool operator<(point p) { return x < p.x || (x == p.x && y < p.y); } // for sorting
+ 
+  inline int64_t dot(point p) { return 1ll * x * p.x + 1ll * y * p.y; }
+  inline int64_t cross(point p) { return 1ll * x * p.y - 1ll * y * p.x; }
+  inline int64_t cross(point a, point b) { return (a - *this).cross(b - *this); }
+};
+
+// check if c is between line segment formed by a and b
+bool point_between(point a, point b, point c) {
+  if (a.cross(c, b)) return false;
+  return min(a.x, b.x) <= c.x && c.x <= max(a.x, b.x) && min(a.y, b.y) <= c.y && c.y <= max(a.y, b.y);
+}
+
+// check if line segment formed by p[0] and p[1] intersects with line segment formed by p[2] and p[3]
+bool intersect(vector<point> &&p) {
+  int64_t a = p[0].cross(p[2], p[1]);
+  int64_t b = p[0].cross(p[3], p[1]);
+  int64_t c = p[2].cross(p[0], p[3]);
+  int64_t d = p[2].cross(p[1], p[3]);
+  if (a > b) swap(a, b);
+  if (c > d) swap(c, d);
+  if (!a && !b && !c && !d) {
+    return point_between(p[0], p[1], p[2]) || point_between(p[0], p[1], p[3]) || point_between(p[2], p[3], p[0]) || point_between(p[2], p[3], p[1]);
+  } else {
+    return a <= 0 && 0 <= b && c <= 0 && 0 <= d;
+  }
+}
+
+// check point inside polygon
+int is_in_polygon(vector<point> &poly, point x) {
+  const point far = point(1e9 + 5, 0);
+  int check = 0;
+  bool boundary = 0;
+  for (int j = 0; j < n; j++) {
+    if (point_between(poly[j], poly[(j + 1) % n], x)) {
+      boundary = 1;
+      break;
+    }
+    if (intersect({x, far, poly[j], poly[(j + 1) % n]})) check++;
+  }
+  if (boundary) return 0; // on boundary
+  else if (check & 1) return 1; // inside
+  else return -1; // outside
+}
+
+// find area of a polygon (points must be adjacent)
+int64_t polygon_area(vector<point> &p) {
+  int64_t ans = p.back().cross(p[0]);
+  for (int i = 0; i < n; i++) {
+    ans += p[i].cross(p[i + 1]);
+  }
+  return abs(ans);
+}
+
+// find convex hull of points (returned adjacent)
+vector<point> convex_hull(vector<point> p) {
+  sort(p.begin(), p.end());
+  vector<point> top, bot;
+  for (int i = 0; i < n; i++) {
+    while (top.size() > 1 && top.back().cross(end(top)[-2], p[i]) < 0)
+      top.pop_back();
+    top.push_back(p[i]);
+    while (bot.size() > 1 && bot.back().cross(end(bot)[-2], p[n - 1 - i]) < 0)
+      bot.pop_back();
+    bot.push_back(p[n - 1 - i]);
+  }
+  top.insert(top.end(), bot.begin() + 1, bot.end() - 1);
+  return top;
+}
+
+
 /////////////////////////////////////////////////////////////////
 int main() {
   ios::sync_with_stdio(0), cin.tie(0);
