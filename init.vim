@@ -51,7 +51,7 @@ using namespace std;
 #endif
 
 int main() {
-  ios::sync_with_stdio(0), cin.tie(0);
+  cin.tie(0)->sync_with_stdio(0);
   for (int __, _ = (cin >> __, 0); ++_ <= __;) {
     cout << "Case #" << _ << ": ";
   }
