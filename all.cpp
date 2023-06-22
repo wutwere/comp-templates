@@ -399,7 +399,7 @@ int is_in_polygon(vector<point> &poly, point x) {
   else return -1; // outside
 }
 
-// find area of a polygon (points must be adjacent)
+// find 2 * area of a polygon (points must be adjacent)
 int64_t polygon_area(vector<point> &p) {
   int64_t ans = p.back().cross(p[0]);
   for (int i = 0; i < n; i++) {
