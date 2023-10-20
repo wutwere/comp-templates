@@ -1,6 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// indexed_set v;
+// v.insert(5);
+// *v.find_by_order(0);
+// v.order_of_key(7);
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace __gnu_pbds;
 typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> indexed_set;
@@ -13,7 +17,7 @@ const int64_t INF64 = 1e18;
 int n, a[MAXN + 1];
 
 // parsing utility
-vector<string> split_string(string s, string spl) { vector<string> ret; int pos = 0; while (pos < s.size()) { size_t nxt = s.find(spl, pos); if (nxt == string::npos) { ret.push_back(s.substr(pos)); break; } else if (nxt == pos) { pos++; continue; } else { ret.push_back(s.substr(pos, int(nxt) - pos)); pos = nxt + 1; } } return ret; }
+vector<string> split_string(string s, string spl) { vector<string> ret; int pos = 0; while (pos < s.size()) { size_t nxt = s.find(spl, pos); if (nxt == string::npos) { ret.push_back(s.substr(pos)); break; } else if (nxt == pos) { ret.push_back(""); pos += spl.size(); continue; } else { ret.push_back(s.substr(pos, int(nxt) - pos)); pos = nxt + spl.size(); } } return ret; }
 
 vector<int> parse_ints(string s) { vector<int> ret; string temp = ""; bool neg = false; s += "#"; for (char c : s) { if (c == '-') { neg = !neg; } else if ('0' <= c && c <= '9') { temp += c; } else { if (temp.size()) { int x = stoi(temp); if (neg) x *= -1; ret.push_back(x); } temp = ""; neg = false; } } return ret; }
 
@@ -82,43 +86,43 @@ struct seg_tree {
 // RMQ + LCA
 template <class T = int>
 struct RMQ {
-    vector<vector<T>> jmp;  // 0-idx
-    RMQ(const vector<T>& V) : jmp(1, V) {
-        for (int pw = 1, k = 1; pw * 2 <= V.size(); pw *= 2, ++k) {
-            jmp.emplace_back(int(V.size()) - pw * 2 + 1);
-            for (int j = 0; j < jmp[k].size(); j++)
-              jmp[k][j] = min(jmp[k - 1][j], jmp[k - 1][j + pw]);
-        }
+  vector<vector<T>> jmp;  // 0-idx
+  RMQ(const vector<T>& V) : jmp(1, V) {
+    for (int pw = 1, k = 1; pw * 2 <= V.size(); pw *= 2, ++k) {
+      jmp.emplace_back(int(V.size()) - pw * 2 + 1);
+      for (int j = 0; j < jmp[k].size(); j++)
+        jmp[k][j] = min(jmp[k - 1][j], jmp[k - 1][j + pw]);
     }
-    T query(int a, int b) { // [a, b)
-        assert(a < b);  // or return inf if a == b
-        int dep = 31 - __builtin_clz(b - a);
-        return min(jmp[dep][a], jmp[dep][b - (1 << dep)]);
-    }
+  }
+  T query(int a, int b) { // [a, b)
+    assert(a < b);  // or return inf if a == b
+    int dep = 31 - __builtin_clz(b - a);
+    return min(jmp[dep][a], jmp[dep][b - (1 << dep)]);
+  }
 };
 // 0-idx
 // make vector<vector<int>> adj
 // then build LCA lca(adj, root)
 // then l = lca.lca(u, v)
 struct LCA {
-    int tim = 0;
-    vector<int> time, path, ret;
-    RMQ<int> rmq;
-    LCA(vector<vector<int>>& g, int rt) : time(g.size()), rmq((dfs(g, rt, -1), ret)) {}
-    void dfs(vector<vector<int>>& g, int u, int fa) {
-        time[u] = tim++;
-        for (int v : g[u]) {
-            if (v == fa) continue;
-            path.push_back(u), ret.push_back(time[u]);
-            dfs(g, v, u);
-        }
+  int tim = 0;
+  vector<int> time, path, ret;
+  RMQ<int> rmq;
+  LCA(vector<vector<int>>& g, int rt) : time(g.size()), rmq((dfs(g, rt, -1), ret)) {}
+  void dfs(vector<vector<int>>& g, int u, int fa) {
+    time[u] = tim++;
+    for (int v : g[u]) {
+      if (v == fa) continue;
+      path.push_back(u), ret.push_back(time[u]);
+      dfs(g, v, u);
     }
-    int lca(int a, int b) {
-        if (a == b) return a;
-        tie(a, b) = minmax(time[a], time[b]);
-        return path[rmq.query(a, b)];
-    }
-    // dist(a, b) { return depth[a] + depth[b] - 2 * depth[lca(a, b)]; }
+  }
+  int lca(int a, int b) {
+    if (a == b) return a;
+    tie(a, b) = minmax(time[a], time[b]);
+    return path[rmq.query(a, b)];
+  }
+  // dist(a, b) { return depth[a] + depth[b] - 2 * depth[lca(a, b)]; }
 };
 
 
@@ -162,134 +166,123 @@ struct disjoint_set {
 // tourist dinic's
 template <typename T>
 class flow_graph {
- public:
-  static constexpr T eps = (T) 1e-9;
- 
-  struct edge {
-    int from;
-    int to;
-    T c;
-    T f;
-  };
- 
-  vector<vector<int>> g;
-  vector<edge> edges;
-  int n;
-  int st;
-  int fin;
-  T flow;
- 
-  flow_graph(int _n, int _st, int _fin) : n(_n), st(_st), fin(_fin) {
-    assert(0 <= st && st < n && 0 <= fin && fin < n && st != fin);
-    g.resize(n);
-    flow = 0;
-  }
- 
-  void clear_flow() {
-    for (const edge &e : edges) {
-      e.f = 0;
+  public:
+    static constexpr T eps = (T) 1e-9;
+    struct edge {
+      int from;
+      int to;
+      T c;
+      T f;
+    };
+    vector<vector<int>> g;
+    vector<edge> edges;
+    int n;
+    int st;
+    int fin;
+    T flow;
+    flow_graph(int _n, int _st, int _fin) : n(_n), st(_st), fin(_fin) {
+      assert(0 <= st && st < n && 0 <= fin && fin < n && st != fin);
+      g.resize(n);
+      flow = 0;
     }
-    flow = 0;
-  }
-   
-  int add(int from, int to, T forward_cap, T backward_cap) {
-    assert(0 <= from && from < n && 0 <= to && to < n);
-    int id = (int) edges.size();
-    g[from].push_back(id);
-    edges.push_back({from, to, forward_cap, 0});
-    g[to].push_back(id + 1);
-    edges.push_back({to, from, backward_cap, 0});
-    return id;
-  }
+    void clear_flow() {
+      for (const edge &e : edges) {
+        e.f = 0;
+      }
+      flow = 0;
+    }
+    int add(int from, int to, T forward_cap, T backward_cap) {
+      assert(0 <= from && from < n && 0 <= to && to < n);
+      int id = (int) edges.size();
+      g[from].push_back(id);
+      edges.push_back({from, to, forward_cap, 0});
+      g[to].push_back(id + 1);
+      edges.push_back({to, from, backward_cap, 0});
+      return id;
+    }
 };
- 
+
 template <typename T>
 class dinic {
- public:
-  flow_graph<T> &g;
- 
-  vector<int> ptr;
-  vector<int> d;
-  vector<int> q;
- 
-  dinic(flow_graph<T> &_g) : g(_g) {
-    ptr.resize(g.n);
-    d.resize(g.n);
-    q.resize(g.n);
-  }
- 
-  bool expath() {
-    fill(d.begin(), d.end(), -1);
-    q[0] = g.fin;
-    d[g.fin] = 0;
-    int beg = 0, end = 1;
-    while (beg < end) {
-      int i = q[beg++];
-      for (int id : g.g[i]) {
-        const auto &e = g.edges[id];
-        const auto &back = g.edges[id ^ 1];
-        if (back.c - back.f > g.eps && d[e.to] == -1) {
-          d[e.to] = d[i] + 1;
-          if (e.to == g.st) {
-            return true;
+  public:
+    flow_graph<T> &g;
+    vector<int> ptr;
+    vector<int> d;
+    vector<int> q;
+    dinic(flow_graph<T> &_g) : g(_g) {
+      ptr.resize(g.n);
+      d.resize(g.n);
+      q.resize(g.n);
+    }
+    bool expath() {
+      fill(d.begin(), d.end(), -1);
+      q[0] = g.fin;
+      d[g.fin] = 0;
+      int beg = 0, end = 1;
+      while (beg < end) {
+        int i = q[beg++];
+        for (int id : g.g[i]) {
+          const auto &e = g.edges[id];
+          const auto &back = g.edges[id ^ 1];
+          if (back.c - back.f > g.eps && d[e.to] == -1) {
+            d[e.to] = d[i] + 1;
+            if (e.to == g.st) {
+              return true;
+            }
+            q[end++] = e.to;
           }
-          q[end++] = e.to;
         }
       }
+      return false;
     }
-    return false;
-  }
-   
-  T dfs(int v, T w) {
-    if (v == g.fin) {
-      return w;
-    }
-    int &j = ptr[v];
-    while (j >= 0) {
-      int id = g.g[v][j];
-      const auto &e = g.edges[id];
-      if (e.c - e.f > g.eps && d[e.to] == d[v] - 1) {
-        T t = dfs(e.to, min(e.c - e.f, w));
-        if (t > g.eps) {
-          g.edges[id].f += t;
-          g.edges[id ^ 1].f -= t;
-          return t;
+    T dfs(int v, T w) {
+      if (v == g.fin) {
+        return w;
+      }
+      int &j = ptr[v];
+      while (j >= 0) {
+        int id = g.g[v][j];
+        const auto &e = g.edges[id];
+        if (e.c - e.f > g.eps && d[e.to] == d[v] - 1) {
+          T t = dfs(e.to, min(e.c - e.f, w));
+          if (t > g.eps) {
+            g.edges[id].f += t;
+            g.edges[id ^ 1].f -= t;
+            return t;
+          }
         }
+        j--;
       }
-      j--;
+      return 0;
     }
-    return 0;
-  }
- 
-  T max_flow() {
-    while (expath()) {
-      for (int i = 0; i < g.n; i++) {
-        ptr[i] = (int) g.g[i].size() - 1;
-      }
-      T big_add = 0;
-      while (true) {
-        T add = dfs(g.st, numeric_limits<T>::max());
-        if (add <= g.eps) {
+    T max_flow() {
+      while (expath()) {
+        for (int i = 0; i < g.n; i++) {
+          ptr[i] = (int) g.g[i].size() - 1;
+        }
+        T big_add = 0;
+        while (true) {
+          T add = dfs(g.st, numeric_limits<T>::max());
+          if (add <= g.eps) {
+            break;
+          }
+          big_add += add;
+        }
+        if (big_add <= g.eps) {
           break;
         }
-        big_add += add;
+        g.flow += big_add;
       }
-      if (big_add <= g.eps) {
-        break;
+      return g.flow;
+    }
+    vector<bool> min_cut() {
+      max_flow();
+      vector<bool> ret(g.n);
+      for (int i = 0; i < g.n; i++) {
+        ret[i] = (d[i] != -1);
       }
-      g.flow += big_add;
+      return ret;
     }
-    return g.flow;
-  }
- 
-  vector<bool> min_cut() {
-    max_flow();
-    vector<bool> ret(g.n);
-    for (int i = 0; i < g.n; i++) {
-      ret[i] = (d[i] != -1);
-    }
-    return ret;
-  }
 };
 
 
@@ -320,7 +313,7 @@ vector<int> manacher(string &s) {
   for (int i = 1, l = 1, r = 1; i < odd.size(); i++) {
     if (i < r) m[i] = max(0, min(r - i, m[l + r - i]));
     if (i + m[i] >= r) while (odd[i - m[i] - 1] == odd[i + m[i] + 1])
-        m[i]++, l = i - m[i], r = i + m[i];
+      m[i]++, l = i - m[i], r = i + m[i];
   }
   return vector<int>(m.begin() + 1, m.end() - 2);
 }
@@ -343,23 +336,27 @@ struct custom_hash {
 
 
 // 2d geometry
-struct point {
-  int x, y;
- 
-  point(int x_ = 0, int y_ = 0) : x(x_), y(y_) {}
- 
-  point operator+(point p) { return point(x + p.x, y + p.y); }
-  point operator-(point p) { return point(x - p.x, y - p.y); }
-  point operator*(int c) { return point(x * c, y * c); }
-  point operator/(int c) { return point(x / c, y / c); }
- 
-  bool operator==(point p) { return x == p.x && y == p.y; }
-  bool operator<(point p) { return x < p.x || (x == p.x && y < p.y); } // for sorting
- 
-  inline int64_t dot(point p) { return 1ll * x * p.x + 1ll * y * p.y; }
-  inline int64_t cross(point p) { return 1ll * x * p.y - 1ll * y * p.x; }
-  inline int64_t cross(point a, point b) { return (a - *this).cross(b - *this); }
+template <class T>
+struct Point {
+  T x, y;
+
+  Point(T x_ = 0, T y_ = 0) : x(x_), y(y_) {}
+
+  Point operator+(Point p) { return Point<T>(x + p.x, y + p.y); }
+  Point operator-(Point p) { return Point<T>(x - p.x, y - p.y); }
+  Point operator*(T c) { return Point<T>(x * c, y * c); }
+  Point operator/(T c) { return Point<T>(x / c, y / c); }
+
+  bool operator==(Point p) { return x == p.x && y == p.y; }
+  bool operator<(Point p) { return x < p.x || (x == p.x && y < p.y); } // for sorting
+
+  inline T dot(Point p) { return (T) x * p.x + (T) y * p.y; }
+  inline T cross(Point p) { return (T) x * p.y - (T) y * p.x; }
+  inline T cross(Point a, Point b) { return (a - *this).cross(b - *this); }
+  inline T dist2() { return x * x + y * y; }
 };
+
+typedef Point<int64_t> point;
 
 // check if c is between line segment formed by a and b
 bool point_between(point a, point b, point c) {
@@ -422,6 +419,26 @@ vector<point> convex_hull(vector<point> p) {
   }
   top.insert(top.end(), bot.begin() + 1, bot.end() - 1);
   return top;
+}
+
+typedef Point<double> P;
+#define arg(p, q) atan2(p.cross(q), p.dot(q))
+double circlePoly(P c, double r, vector<P> ps) {
+  auto tri = [&](P p, P q) {
+    auto r2 = r * r / 2;
+    P d = q - p;
+    auto a = d.dot(p)/d.dist2(), b = (p.dist2()-r*r)/d.dist2();
+    auto det = a * a - b;
+    if (det <= 0) return arg(p, q) * r2;
+    auto s = max(0., -a-sqrt(det)), t = min(1., -a+sqrt(det));
+    if (t < 0 || 1 <= s) return arg(p, q) * r2;
+    P u = p + d * s, v = p + d * t;
+    return arg(p,u) * r2 + u.cross(v)/2 + arg(v,q) * r2;
+  };
+  auto sum = 0.0;
+  for (int i = 0; i < ps.size(); i++)
+    sum += tri(ps[i] - c, ps[(i + 1) % ps.size()] - c);
+  return sum;
 }
 
 
