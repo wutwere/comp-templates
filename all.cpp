@@ -129,16 +129,16 @@ struct LCA {
 // vector<int64_t> min_dists = dijkstra(1, edges);
 vector<int64_t> dijkstra(int root, vector<vector<array<int64_t, 2>>> &edges) {
   vector<int64_t> minDist(n + 1, INF64);
-  priority_queue<array<int64_t, 2>> pq;
+  priority_queue<array<int64_t, 2>, vector<array<int64_t, 2>>, greater<array<int64_t, 2>>> pq;
   minDist[root] = 0;
   pq.push({0, root});
   while (!pq.empty()) {
-    auto [dist, node] = pq.top(); dist *= -1; pq.pop();
+    auto [dist, node] = pq.top(); pq.pop();
     if (minDist[node] != dist) continue;
     for (auto [nbr, weight] : edges[node]) {
       if (dist + weight < minDist[nbr]) {
         minDist[nbr] = dist + weight;
-        pq.push({-minDist[nbr], nbr});
+        pq.push({minDist[nbr], nbr});
       }
     }
   }
