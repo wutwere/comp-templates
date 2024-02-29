@@ -50,6 +50,15 @@ using namespace std;
 #define dbg(x...)
 #endif
 
+/*
+  Think about which subtasks you can solve.
+  Think: If you just had x, you could solve the problem. Can you get x?
+  Think from different perspectives. Solve backwards? Solve from the middle?
+  Find interesting properties of the problem.
+  Visualize and manually solve small example cases.
+  Remember you can repeat these tricks more than once on the same problem as you make progress.
+*/
+
 int main() {
   cin.tie(0)->sync_with_stdio(0);
   for (int __, _ = (cin >> __, 0); ++_ <= __;) {
