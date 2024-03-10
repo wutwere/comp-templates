@@ -1,11 +1,5 @@
 call plug#begin()
 
-Plug 'dense-analysis/ale'
-let g:ale_linters = {'cpp': ['g++']}
-let g:ale_cpp_cc_executable = 'g++'
-let g:ale_cpp_cc_options = '-std=c++17 -Wall -Wextra -DLOCAL'
-let g:ale_lint_on_text_changed = 'always'
-
 Plug 'vim-airline/vim-airline'
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'dracula'
