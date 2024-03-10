@@ -1,9 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-// BEGIN
-
-
 struct MCMF {
   static const int MAXN = 1010, MAXM = 2010, INF = 1e9;
   struct edge {
@@ -85,12 +79,3 @@ struct MCMF {
     return ans;
   }
 } G;
-
-// END
-
-int main() {
-	cin.tie(0)->sync_with_stdio(0);
-	for (int __, _ = (cin >> __, 0); ++_ <= __;) {
-		cout << "Case #" << _ << ": ";
-	}
-}
