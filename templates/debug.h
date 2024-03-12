@@ -3,7 +3,7 @@ namespace __DEBUG_UTIL__
     using namespace std;
     /* Primitive Datatypes Print */
     void print(const char *x) { cerr << x; }
-    void print(bool x) { cerr << (x ? "T" : "F"); }
+    void print(bool x) { cerr << (x ? "T" : "."); }
     void print(char x) { cerr << '\'' << x << '\''; }
     void print(signed short int x) { cerr << x; }
     void print(unsigned short int x) { cerr << x; }
@@ -25,7 +25,7 @@ namespace __DEBUG_UTIL__
         int f = 0;
         cerr << '{';
         for (auto &&i : v)
-            cerr << (f++ ? "," : "") << (i ? "T" : "F");
+            cerr << (f++ ? "," : "") << (i ? "T" : ".");
         cerr << "}";
     }
     /* Templates Declarations to support nested datatypes */
