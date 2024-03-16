@@ -44,14 +44,11 @@ using namespace std;
 #define dbg(x...)
 #endif
 
-/*
-  Think about which subtasks you can solve.
-  Think: If you just had x, you could solve the problem. Can you get x?
-  Think from different perspectives. Solve backwards? Solve from the middle?
-  Find interesting properties of the problem.
-  Visualize and manually solve small example cases.
-  Remember you can repeat these tricks more than once on the same problem as you make progress.
-*/
+// Visualize and manually solve small example cases.
+// Think about simpler variations of the problem.
+// Find interesting properties of the problem.
+// Think: If you just had x, you could solve the problem. Can you get x?
+// Do not assume fancy algorithms are needed. Most solutions are just derived from logic.
 
 int main() {
   cin.tie(0)->sync_with_stdio(0);
