@@ -10,8 +10,6 @@ namespace PollardRho {
   inline ll mul_mod(ll x, ll y, ll m) {
     ll res = __int128(x) * y % m;
     return res;
-    // ll res = x * y - (ll)((long double)x * y / m + 0.5) * m;
-    // return res < 0 ? res + m : res;
   }
   inline ll pow_mod(ll x, ll n, ll m) {
     ll res = 1 % m;
@@ -21,13 +19,11 @@ namespace PollardRho {
     }
     return res;
   }
-  // O(it * (logn)^3), it = number of rounds performed
   inline bool miller_rabin(ll n) {
     if (n <= 2 || (n & 1 ^ 1)) return (n == 2);
     if (n < P) return spf[n] == n;
     ll c, d, s = 0, r = n - 1;
     for (; !(r & 1); r >>= 1, s++) {}
-    // each iteration is a round
     for (int i = 0; primes[i] < n && primes[i] < 32; i++) {
       c = pow_mod(primes[i], r, n);
       for (int j = 0; j < s; j++) {

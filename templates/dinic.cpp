@@ -1,4 +1,3 @@
-// tourist dinic's
 template <typename T>
 class flow_graph {
   public:
