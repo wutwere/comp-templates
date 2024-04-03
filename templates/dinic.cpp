@@ -116,6 +116,7 @@ class dinic {
         ret[i] = (d[i] != -1);
       }
       return ret;
+      // for (auto &e : g.edges) if (cut[e.from] != cut[e.to] && e.f == e.c) ... edge cut
     }
 };
 
