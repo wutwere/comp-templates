@@ -182,3 +182,7 @@ namespace __DEBUG_UTIL__
 
 #define dbg(...) std::cerr << __LINE__ << ": [", __DEBUG_UTIL__::printer(#__VA_ARGS__, __VA_ARGS__)
 #define dbgArr(...) std::cerr << __LINE__ << ": [", __DEBUG_UTIL__::printerArr(#__VA_ARGS__, __VA_ARGS__)
+
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+// inclusive range [lower, upper] random int
+#define uid(lower, upper) uniform_int_distribution<int>(lower, upper)(rng)

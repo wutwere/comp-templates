@@ -44,7 +44,7 @@ using namespace std;
 #define dbg(x...)
 #endif
 
-// Always assume a problem requires no fancy algorithms, unless it's obvious.
+// Try to truly understand and transform the problem.
 // Visualize small example cases.
 // Think about simpler variations.
 // Notice interesting properties.
