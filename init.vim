@@ -44,10 +44,9 @@ using namespace std;
 #define dbg(x...)
 #endif
 
-// Try to truly understand and transform the problem.
-// Visualize small example cases.
+// Try to truly understand the problem so well that it becomes trivial.
 // Think about simpler variations.
-// Notice interesting properties.
+// Notice interesting invariants.
 // Think: If you just had x, you could solve the problem. Can you get x?
 
 int main() {
