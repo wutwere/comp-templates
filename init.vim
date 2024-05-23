@@ -44,11 +44,7 @@ using namespace std;
 #define dbg(x...)
 #endif
 
-// Always assume a problem requires no fancy algorithms, unless it's obvious.
-// Visualize small example cases.
-// Think about simpler variations.
-// Notice interesting properties.
-// Think: If you just had x, you could solve the problem. Can you get x?
+// the only thing that matters is genuine interest in trying to better understand problems
 
 int main() {
   cin.tie(0)->sync_with_stdio(0);
