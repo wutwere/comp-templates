@@ -44,7 +44,7 @@ using namespace std;
 #define dbg(x...)
 #endif
 
-// the only thing that matters is genuine interest in trying to better understand problems
+// make it simpler
 
 int main() {
   cin.tie(0)->sync_with_stdio(0);
