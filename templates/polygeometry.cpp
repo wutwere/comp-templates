@@ -310,7 +310,7 @@ double polygon_line_intersection(vector<PT> p, PT a, PT b) {
   for (int i = 0, j = 0; i + 1 < (int)vec.size(); i++){
     j += vec[i].second;
     if (j) ans += vec[i + 1].first - vec[i].first; // if this portion is inside the polygon
-                                                   // else ans = 0; // if we want the maximum intersected length which is totally inside the polygon, uncomment this and take the maximum of ans
+    // else ans = 0; // if we want the maximum intersected length which is totally inside the polygon, uncomment this and take the maximum of ans
   }
   ans = ans / sqrt(dot(l.v, l.v));
   p.pop_back();
