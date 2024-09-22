@@ -1,13 +1,11 @@
 call plug#begin()
 
-Plug 'vim-airline/vim-airline'
-let g:airline_powerline_fonts = 1
-let g:airline_theme = 'dracula'
-let g:airline#extensions#tabline#enabled = 1
+Plug 'itchyny/lightline.vim'
+let g:lightline = { 'colorscheme': 'github' }
 
 Plug 'sheerun/vim-polyglot'
 
-Plug 'dikiaap/minimalist'
+Plug 'cormacrelf/vim-colors-github'
 Plug 'tomasr/molokai'
 Plug 'dracula/vim', { 'as': 'dracula' }
 
@@ -22,8 +20,9 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 cd ~/Desktop/code
 
 syntax on
-color dracula
+color github
 
+set background=light
 set termguicolors
 set nu
 set rnu

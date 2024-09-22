@@ -15,6 +15,8 @@ Change into the directory you found and do `g++ -O2 -DLOCAL -std=c++17 stdc++.h`
 # Font
 [Install font here](https://github.com/powerline/fonts/blob/master/UbuntuMono/Ubuntu%20Mono%20derivative%20Powerline.ttf), right click the top bar of vim/nvim, go to Properties->Font, set font
 
+(9/21/2024 update: Cascadia Mono, which is on Windows by default I think, looks better)
+
 # Installing vim-plug on Windows
 First, make sure you have [Git](https://git-scm.com/download/win). Then, run this in Windows PowerShell:
 ```powershell
