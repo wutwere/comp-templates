@@ -30,6 +30,7 @@ set expandtab
 set tabstop=2
 set shiftwidth=2
 set mouse=a
+set cindent cino=j1,(0,ws,Ws
 
 inoremap {<CR> {<CR>}<Esc>O
 
@@ -43,8 +44,16 @@ using namespace std;
 #define dbg(x...)
 #endif
 
+#define rep(i, a, b) for(int i = a; i < (b); ++i)
+#define all(x) begin(x), end(x)
+#define sz(x) (int)(x).size()
+typedef long long ll;
+typedef pair<int, int> pii;
+typedef vector<int> vi;
+
 int main() {
   cin.tie(0)->sync_with_stdio(0);
+	cin.exceptions(cin.failbit);
   for (int __, _ = (cin >> __, 0); ++_ <= __;) {
     cout << "Case #" << _ << ": ";
   }
