@@ -1,7 +1,7 @@
 call plug#begin()
 
 Plug 'itchyny/lightline.vim'
-let g:lightline = { 'colorscheme': 'github' }
+let g:lightline = { 'colorscheme': 'molokai' }
 
 Plug 'sheerun/vim-polyglot'
 
@@ -20,9 +20,9 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 cd ~/Desktop/code
 
 syntax on
-color github
+color molokai
 
-set background=light
+set background=dark
 set termguicolors
 set nu
 set rnu
@@ -42,8 +42,6 @@ using namespace std;
 #else
 #define dbg(x...)
 #endif
-
-// make it simpler
 
 int main() {
   cin.tie(0)->sync_with_stdio(0);
