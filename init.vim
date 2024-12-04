@@ -17,7 +17,7 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
   \| PlugInstall --sync | source $MYVIMRC
 \| endif
 
-cd ~/Desktop/code
+cd ~/dev/comp
 
 syntax on
 color molokai
@@ -53,7 +53,7 @@ typedef vector<int> vi;
 
 int main() {
   cin.tie(0)->sync_with_stdio(0);
-	cin.exceptions(cin.failbit);
+  cin.exceptions(cin.failbit);
   for (int __, _ = (cin >> __, 0); ++_ <= __;) {
     cout << "Case #" << _ << ": ";
   }
@@ -61,11 +61,11 @@ int main() {
 END
 
 function Run_clipboard()
-  call writefile(split(getreg('+'), '\n'), 'in')
+  call writefile(split(getreg('+'), '\n'), 'in.txt')
   if expand('%:e') == 'cpp'
-    execute '!start cmd /c "run < in & pause"'
+    execute '!start cmd /c "run < in.txt & pause"'
   elseif expand('%:e') == 'py'
-    execute 'w | !start cmd /c "py ' . expand('%:t') . ' < in & pause"'
+    execute 'w | !start cmd /c "py ' . expand('%:t') . ' < in.txt & pause"'
   endif
 endfunction
 
