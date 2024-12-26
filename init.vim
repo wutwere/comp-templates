@@ -70,7 +70,7 @@ function Run_clipboard()
 endfunction
 
 autocmd filetype cpp nnoremap <C-N> :%d \| call setline(1, g:template)<CR>G2k
-autocmd filetype cpp nnoremap <C-B> gg=G'':w \| !g++ -O2 -DLOCAL -std=c++17 %:r.cpp -o run<CR>
+autocmd filetype cpp nnoremap <C-B> :w \| !g++ -O2 -DLOCAL -std=c++17 %:r.cpp -o run<CR>
 nnoremap <C-C> :call Run_clipboard()<CR><CR>
 autocmd filetype cpp nnoremap <C-S> :!start cmd /c "run & timeout /t -1 /nobreak"<CR><CR>
 nnoremap <C-A> :%y+<CR>
