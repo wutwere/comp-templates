@@ -1,5 +1,5 @@
 @echo off
-g++ -std=c++17 -O2 -DLOCAL -o run b.cpp
+g++ -std=c++17 -O2 -DLOCAL -o run f.cpp
 g++ -std=c++17 -O2 -DLOCAL -o slow _.cpp
 g++ -std=c++17 -O2 -DLOCAL -o gen gen.cpp
 for /l %%x in (1, 1, 10000) do (

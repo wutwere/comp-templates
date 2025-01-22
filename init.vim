@@ -26,11 +26,11 @@ set background=dark
 set termguicolors
 set nu
 set rnu
-set expandtab
 set tabstop=2
 set shiftwidth=2
 set mouse=a
 set cindent cino=j1,(0,ws,Ws
+set expandtab
 
 inoremap {<CR> {<CR>}<Esc>O
 
